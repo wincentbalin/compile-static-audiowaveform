@@ -1,2 +1,4 @@
-# compile-static-audiowaveform
-Compile static audiowaveform binaries for Win32 and Win64
+# audiowaveform compilation for Windows using MinGW
+
+Compile static [audiowaveform](https://github.com/bbc/audiowaveform) Windows binaries using MinGW in Docker.
+

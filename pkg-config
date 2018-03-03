@@ -1,0 +1,7 @@
+#!/bin/sh
+PREFIX=/tmp/compile
+PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig
+export PKG_CONFIG_LIBDIR
+PKG_CONFIG_PATH=$PKG_CONFIG_PATH_MINGW32MSVC
+export PKG_CONFIG_PATH
+exec pkg-config "$@"

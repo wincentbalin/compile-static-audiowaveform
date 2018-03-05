@@ -16,6 +16,8 @@ RUN DEBIAN_FRONTEND=noninteractive \
         gperf \
         pkg-config \
         cmake \
+        python \
+        python-lxml \
         man \
         wget \
         unzip \
@@ -342,7 +344,8 @@ RUN make distclean
 WORKDIR ..
 
 WORKDIR boost_${BOOST_VERSION_MANGLED}
-RUN ./b2 install --prefix=${C} toolset=gcc-mingw target-os=windows --with-filesystem --with-program_options --with-regex variant=release link=static runtime-link=static --clean
+RUN ./b2 install --prefix=${C} toolset=gcc-mingw target-os=windows --with-filesystem --with-program_options --with-regex variant=release link=static runtime-link=static --clean && \
+    rm -r bin.v2
 WORKDIR ..
 
 WORKDIR audiowaveform-${AUDIOWAVEFORM_VERSION}
@@ -488,16 +491,19 @@ WORKDIR ..
 
 # Compile libgd
 WORKDIR libgd-${LIBGD_VERSION}
-# Defines and sed command taken from https://github.com/mxe/mxe/blob/master/src/gd.mk
+# Define taken from https://github.com/mxe/mxe/blob/master/src/gd.mk
 RUN CFLAGS="-DNONDLL" ./configure --prefix=${C} --host=${CROSS_ARCH} --build=${BUILD_ARCH} --enable-static --disable-shared && \
     make && \
     make install
 WORKDIR ..
 
 # Compile boost
+WORKDIR ${BOOST_BUILD_PATH}
+RUN echo "using gcc : mingw : ${CROSS_ARCH}-g++ ;" > user-config.jam
+WORKDIR ..
 WORKDIR boost_${BOOST_VERSION_MANGLED}
 RUN ./bootstrap.sh && \
-    ./b2 install --prefix=${C} toolset=gcc-mingw target-os=windows --with-filesystem --with-program_options --with-regex variant=release link=static runtime-link=static
+    ./b2 install --prefix=${C} toolset=gcc-mingw target-os=windows --with-filesystem --with-program_options --with-regex variant=release link=static runtime-link=static address-model=64
 WORKDIR ..
 
 # Compile audiowaveform

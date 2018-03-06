@@ -1,12 +1,12 @@
-# **audiowaveform** compilation for Windows using MinGW
+# audiowaveform compilation for Windows using MinGW
 Compile [audiowaveform](https://github.com/bbc/audiowaveform) to static Windows binaries using MinGW in Docker.
 
 ## Building
 Just run
 
-`bash
+```bash
 ./compile_audiowaveform.sh
-`
+```
 
 in _Docker Quickstart Terminal_, if you are in Windows, or in any terminal with _Docker_ installed, if in Linux.
 

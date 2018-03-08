@@ -1,3 +1,123 @@
+--- src/OptionHandler.cpp.orig  2018-02-20 01:31:50.099348361 +0000
++++ src/OptionHandler.cpp       2018-02-20 01:46:07.066179501 +0000
+@@ -115,11 +115,19 @@
+ {
+     Mp3AudioFileReader reader;
+
++#ifdef __MINGW32__
++    if (!reader.open(input_filename.string().c_str())) {
++#else
+     if (!reader.open(input_filename.c_str())) {
++#endif
+         return false;
+     }
+
++#ifdef __MINGW32__
++    WavFileWriter writer(output_filename.string().c_str());
++#else
+     WavFileWriter writer(output_filename.c_str());
++#endif
+
+     return reader.run(writer);
+ }
+@@ -143,7 +151,11 @@
+         return false;
+     }
+
++#ifdef __MINGW32__
++    if (!audio_file_reader->open(input_filename.string().c_str())) {
++#else
+     if (!audio_file_reader->open(input_filename.c_str())) {
++#endif
+         return false;
+     }
+
+@@ -159,10 +171,18 @@
+     const int bits = options.getBits();
+
+     if (output_file_ext == ".dat") {
++#ifdef __MINGW32__
++        return buffer.save(output_filename.string().c_str(), bits);
++#else
+         return buffer.save(output_filename.c_str(), bits);
++#endif
+     }
+     else {
++#ifdef __MINGW32__
++        return buffer.saveAsJson(output_filename.string().c_str(), bits);
++#else
+         return buffer.saveAsJson(output_filename.c_str(), bits);
++#endif
+     }
+ }
+
+@@ -175,7 +195,11 @@
+ {
+     WaveformBuffer buffer;
+
++#ifdef __MINGW32__
++    if (!buffer.load(input_filename.string().c_str())) {
++#else
+     if (!buffer.load(input_filename.c_str())) {
++#endif
+         return false;
+     }
+
+@@ -186,10 +210,18 @@
+     const boost::filesystem::path output_file_ext = output_filename.extension();
+
+     if (output_file_ext == ".json") {
++#ifdef __MINGW32__
++        success = buffer.saveAsJson(output_filename.string().c_str(), bits);
++#else
+         success = buffer.saveAsJson(output_filename.c_str(), bits);
++#endif
+     }
+     else if (output_file_ext == ".txt") {
++#ifdef __MINGW32__
++        success = buffer.saveAsText(output_filename.string().c_str(), bits);
++#else
+         success = buffer.saveAsText(output_filename.c_str(), bits);
++#endif
+     }
+
+     return success;
+@@ -252,7 +284,11 @@
+     const boost::filesystem::path input_file_ext = input_filename.extension();
+
+     if (input_file_ext == ".dat") {
++#ifdef __MINGW32__
++        if (!input_buffer.load(input_filename.string().c_str())) {
++#else
+         if (!input_buffer.load(input_filename.c_str())) {
++#endif
+             return false;
+         }
+
+@@ -265,7 +301,11 @@
+             createAudioFileReader(input_filename)
+         );
+
++#ifdef __MINGW32__
++        if (!audio_file_reader->open(input_filename.string().c_str())) {
++#else
+         if (!audio_file_reader->open(input_filename.c_str())) {
++#endif
+             return false;
+         }
+
+@@ -323,7 +363,11 @@
+     }
+
+     return renderer.saveAsPng(
++#ifdef __MINGW32__
++        output_filename.string().c_str(),
++#else
+         output_filename.c_str(),
++#endif
+         options.getPngCompressionLevel()
+     );
+ }
 --- CMakeLists.txt.orig                                                                            2018-03-01 00:30:13.628409266 +0000
 +++ CMakeLists.txt                                                                                 2018-03-01 00:29:58.728117966 +0000
 @@ -246,7 +246,7 @@

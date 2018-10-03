@@ -1,11 +1,10 @@
---- CMakeLists.txt.orig                                                                            2018-03-01 00:30:13.628409266 +0000
-+++ CMakeLists.txt                                                                                 2018-03-01 00:29:58.728117966 +0000
-@@ -246,7 +246,7 @@
- #-------------------------------------------------------------------------------
-
- # Specify libraries to link against.
--set(LIBS ${LIBSNDFILE_LIBRARY} ${LIBGD_LIBRARY} ${LIBMAD_LIBRARY} ${LIBID3TAG_LIBRARY} ${Boost_LIBRARIES})
-+set(LIBS ${LIBSNDFILE_LIBRARY} ${LIBGD_LIBRARY} ${LIBMAD_LIBRARY} ${LIBID3TAG_LIBRARY} ${Boost_LIBRARIES} ${EXTRA_LIBS})
+--- CMakeLists.txt.orig	2018-10-04 00:06:46.715678000 +0200
++++ CMakeLists.txt	2018-10-04 00:08:02.735606900 +0200
+@@ -264,6 +264,7 @@
+     ${LIBMAD_LIBRARIES}
+     ${LIBID3TAG_LIBRARIES}
+     ${Boost_LIBRARIES}
++    ${EXTRA_LIBS}
+ )
+ 
  target_link_libraries(audiowaveform ${LIBS})
-
- #-------------------------------------------------------------------------------

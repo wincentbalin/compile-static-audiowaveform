@@ -253,8 +253,8 @@ WORKDIR ..
 RUN wget -q -O - https://github.com/bbc/audiowaveform/archive/${AUDIOWAVEFORM_VERSION}.tar.gz | \
     tar zxvf -
 WORKDIR audiowaveform-${AUDIOWAVEFORM_VERSION}
-COPY mingw.patch .
-RUN patch -p0 < mingw.patch
+COPY audiowaveform-mingw.patch .
+RUN patch -p0 < audiowaveform-mingw.patch
 WORKDIR build
 COPY ${CROSS_ARCH}.cmake .
 RUN cmake -DCMAKE_TOOLCHAIN_FILE=${C}/audiowaveform-${AUDIOWAVEFORM_VERSION}/build/${CROSS_ARCH}.cmake -DCMAKE_INSTALL_PREFIX=${C} -DENABLE_TESTS=0 -DCMAKE_CXX_FLAGS_RELEASE="-O3 -DNDEBUG -DBGDWIN32 -static-libgcc -static-libstdc++ -static" -DCMAKE_FIND_LIBRARY_SUFFIXES=".a" -DEXTRA_LIBS="-L${C}/lib -lFLAC -lvorbisenc -lvorbis -logg -lpng -lz" .. && \

@@ -43,8 +43,7 @@ ENV LIQ_VERSION 2.11.9
 ENV FREETYPE2_VERSION 2.10.1
 ENV EXPAT_VERSION 2.2.8
 ENV EXPAT_VERSION_MANGLED 2_2_8
-# Later versions of fontconfig do not supply pre-configured configure script
-ENV FONTCONFIG_VERSION 2.12.6
+ENV FONTCONFIG_VERSION 2.13.92
 ENV LIBGD_VERSION 2.2.5
 ENV BOOST_VERSION 1.65.1
 ENV BOOST_VERSION_MANGLED 1_65_1
@@ -220,8 +219,8 @@ RUN ./configure --prefix=${C} --host=${CROSS_ARCH} --build=${BUILD_ARCH} --enabl
 WORKDIR ..
 
 # Download and compile fontconfig
-RUN wget -q -O - https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.6.tar.bz2 | \
-    tar jxvf -
+RUN wget -q -O - https://www.freedesktop.org/software/fontconfig/release/fontconfig-${FONTCONFIG_VERSION}.tar.gz | \
+    tar zxvf -
 WORKDIR fontconfig-${FONTCONFIG_VERSION}
 RUN ./configure --prefix=${C} --host=${CROSS_ARCH} --build=${BUILD_ARCH} --enable-static --disable-shared && \
     make && \
@@ -521,5 +520,4 @@ RUN $CROSS_ARCH-strip bin/*.exe
 
 # Create mingw64 archive
 RUN zip -r -9 audiowaveform-mingw64.zip bin/ etc/ include/ lib/ share/
-
 
